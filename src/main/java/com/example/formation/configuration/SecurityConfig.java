@@ -22,7 +22,7 @@ public class SecurityConfig {
          httpSecurity.headers().frameOptions().disable();
          httpSecurity.authorizeRequests()
                 .antMatchers("/h2/*").permitAll()
-                .antMatchers("/private").authenticated()
+                .antMatchers("/private/*").authenticated()
                 .antMatchers("/admin").hasAuthority("ADMIN")
                 .anyRequest().permitAll()
                 .and().formLogin();
