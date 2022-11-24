@@ -1,9 +1,11 @@
 package com.example.formation.serviceImp;
 
+import com.example.formation.exceptions.UserNotFoundException;
 import com.example.formation.model.User;
 import com.example.formation.repository.UserRepository;
 import com.example.formation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,7 +27,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUser(Integer id) {
-        Optional<User> user = userRepository.findById(id);
+        Optional<User> user = Optional.ofNullable(userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found")));
         return user.get();
     }
 
@@ -41,14 +44,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User modifyUser(User user) {
-        User userFetched = userRepository.findById(user.getId()).get();
-        if(Objects.isNull(userFetched)){
-            return null;
-        }
-        userFetched.setName(user.getName());
-        userFetched.setPassword(user.getPassword());
-        userFetched.setRole(user.getRole() );
-        return userRepository.save(userFetched);
+        Optional<User> userFetched = Optional.ofNullable(userRepository.findById(user.getId())
+                .orElseThrow(() -> new UserNotFoundException("User with id " + user.getId() + " not found")));
+        userFetched.get().setName(user.getName());
+        userFetched.get().setPassword(user.getPassword());
+        userFetched.get().setRole(user.getRole() );
+        return userRepository.save(userFetched.get());
     }
 
 }

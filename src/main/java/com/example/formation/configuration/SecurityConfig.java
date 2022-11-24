@@ -41,14 +41,10 @@ public class SecurityConfig {
          httpSecurity.authorizeRequests()
                  .antMatchers("/h2/*").permitAll()
                  .antMatchers("/swagger*").permitAll()
-                 .antMatchers("/Users*").authenticated()
+                 //.antMatchers("/Users*").authenticated()
+                 .antMatchers("/Users*").permitAll()
                  .and()
                  .formLogin().permitAll();
-                /*.antMatchers("/h2/*").permitAll()
-                .antMatchers("/admin").hasAuthority("ADMIN")
-                .anyRequest().permitAll()
-                .and().formLogin();*/
-
 
          return httpSecurity.build();
     }
