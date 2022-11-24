@@ -19,12 +19,12 @@ public class MyApplicationRunner implements ApplicationRunner {
         userRepository.save(
                 new User(1,
                 "user1",
-                "1234",
-                "USER", null));
+                "$2a$12$gQZZiEQmXnboMS710cJ7euoVsQF6hOxAUicmm62q/u0cjvS7JItIS",
+                "USER", "1"));
         userRepository.save(
                 new User(2,
                         "admin",
-                        "admin",
-                        "ADMIN",null));
+                        "$2a$12$HvQ8ZiZbPYYHyqc27Y5STe0HAmf67vfEkj.GuijZprBbtF6V8d2O2",
+                        "ADMIN","1"));
     }
 }
