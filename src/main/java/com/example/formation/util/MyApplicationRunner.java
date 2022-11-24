@@ -20,11 +20,11 @@ public class MyApplicationRunner implements ApplicationRunner {
                 new User(1,
                 "user1",
                 "1234",
-                "USER"));
+                "USER", null));
         userRepository.save(
                 new User(2,
                         "admin",
                         "admin",
-                        "ADMIN"));
+                        "ADMIN",null));
     }
 }
