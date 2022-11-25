@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.MessageSourceResourceBundle;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,9 +32,14 @@ public class SecurityConfig {
 
     @Bean
     public MessageSource messageSource() {
+        //to change to french
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setDefaultLocale(Locale.FRENCH);
         messageSource.addBasenames("org/springframework/security/messages"); // my messages will override spring security messages, if message code the same
+        //to change to customized message
+        //ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        //messageSource.setBasenames("custommessages", "org/springframework/security/messages"); // my messages will override spring security messages, if message code the same
+        //messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
     @Autowired
