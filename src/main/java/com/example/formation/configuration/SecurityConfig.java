@@ -1,23 +1,43 @@
 package com.example.formation.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.MessageSourceResourceBundle;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
+import java.util.Locale;
 
 @Configuration
 @EnableWebSecurity
+
 public class SecurityConfig {
+
+
 
     @Autowired
     private DataSource datasource;
 
+
+
+
+
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setDefaultLocale(Locale.FRENCH);
+        messageSource.addBasenames("org/springframework/security/messages"); // my messages will override spring security messages, if message code the same
+        return messageSource;
+    }
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication().passwordEncoder(new BCryptPasswordEncoder())
@@ -39,9 +59,26 @@ public class SecurityConfig {
                  .antMatchers("/Users*").authenticated()
                  //.antMatchers("/Users*").permitAll()
                  .and()
-                 .formLogin().permitAll();
-
+                 .formLogin()
+                 //.permitAll();
+                 //to filter the single authentication
+                 .and()
+                 .httpBasic()
+                 .and()
+                 .sessionManagement()
+                 .maximumSessions(1)
+                 .expiredUrl("/expired")
+                 .maxSessionsPreventsLogin(true)
+                 .sessionRegistry(sessionRegistry())
+                 .and()
+                 .and();
          return httpSecurity.build();
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        SessionRegistry sessionRegistry = new SessionRegistryImpl();
+        return sessionRegistry;
     }
 
 
